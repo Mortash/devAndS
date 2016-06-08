@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="backgroundTop">#97e2fd</color>
+    <color name="backgroundBottom">#c9f1f9</color>
+    <color name="text">#4c81b2</color>
+    <color name="textLink">#FFFFFF</color>
+    <color name="buttonGreen">#b6ca7f</color>
+    <color name="backgroundGreen">#c2d789</color>
+    <color name="validate_green">#146f1a</color>
+</resources>

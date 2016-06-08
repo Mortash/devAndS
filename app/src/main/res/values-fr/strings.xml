@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Paramètres</string>
+    <string name="password">Mot de passe</string>
+    <string name="register">S\'inscrire</string>
+    <string name="my_account">Mon compte</string>
+    <string name="ConfirmPassword">Confirmer</string>
+    <string name="but_cancel">Annuler</string>
+    <string name="login">Identifiant</string>
+    <string name="mail">Mail</string>
+    <string name="forgottenPassword">mot de passe oublié ?</string>
+    <string name="signOut">Déconnexion</string>
+    <string name="signUp">S\'inscrire</string>
+    <string name="withForm">via Formulaire</string>
+    <string name="signIn">Connexion</string>
+    <string name="free_way">Mode libre</string>
+    <string name="moment">Moment</string>
+    <string name="stop_mode">Arrêter Mode Libre</string>
+</resources>

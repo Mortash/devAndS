@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/background" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:id="@+id/tv_login"
+        android:textSize="@dimen/text_mmenu"
+        android:layout_alignLeft="@+id/et_login"
+        android:layout_alignStart="@+id/et_login"
+        android:paddingTop="@dimen/padd_top"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_login"
+        android:editable="false"
+        android:inputType="text"
+        android:minWidth="300dp"
+        android:minHeight="40dp"
+        android:hint="@string/login"
+        android:textSize="@dimen/text_mmenu"
+        android:background="@drawable/rounded_edit_text"
+        android:layout_marginTop="80dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/password"
+        android:id="@+id/tv_password"
+        android:textSize="@dimen/text_mmenu"
+        android:layout_below="@+id/et_login"
+        android:layout_alignLeft="@+id/et_login"
+        android:layout_alignStart="@+id/et_login"
+        android:layout_marginTop="@dimen/padd_top" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_password"
+        android:editable="false"
+        android:inputType="textPassword"
+        android:minWidth="300dp"
+        android:minHeight="40dp"
+        android:hint="@string/password"
+        android:textSize="@dimen/text_mmenu"
+        android:background="@drawable/rounded_edit_text"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_below="@+id/tv_password"
+        android:layout_alignLeft="@+id/tv_password"
+        android:layout_alignStart="@+id/tv_password"
+        android:layout_alignRight="@+id/et_login"
+        android:layout_alignEnd="@+id/et_login"
+        android:drawableRight="@drawable/icone_oeil" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ConfirmPassword"
+        android:id="@+id/tv_confirmpPassword"
+        android:textSize="@dimen/text_mmenu"
+        android:layout_below="@+id/et_password"
+        android:layout_alignLeft="@+id/et_password"
+        android:layout_alignStart="@+id/et_password"
+        android:layout_marginTop="@dimen/padd_top" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_confirmPassword"
+        android:editable="false"
+        android:inputType="textPassword"
+        android:minWidth="300dp"
+        android:minHeight="40dp"
+        android:hint="@string/password"
+        android:textSize="@dimen/text_mmenu"
+        android:background="@drawable/rounded_edit_text"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_confirmpPassword"
+        android:layout_alignLeft="@+id/tv_confirmpPassword"
+        android:layout_alignStart="@+id/tv_confirmpPassword"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:drawableRight="@drawable/icone_oeil" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mail"
+        android:id="@+id/tv_email"
+        android:textSize="@dimen/text_mmenu"
+        android:layout_below="@+id/et_confirmPassword"
+        android:layout_alignLeft="@+id/et_confirmPassword"
+        android:layout_alignStart="@+id/et_confirmPassword"
+        android:layout_marginTop="@dimen/padd_top" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_mail"
+        android:editable="false"
+        android:inputType="textEmailAddress"
+        android:minWidth="300dp"
+        android:minHeight="40dp"
+        android:hint="@string/mail"
+        android:textSize="@dimen/text_mmenu"
+        android:background="@drawable/rounded_edit_text"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_email"
+        android:layout_alignLeft="@+id/tv_email"
+        android:layout_alignStart="@+id/tv_email"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/but_ok"
+        android:id="@+id/btn_tryRegister"
+        android:background="@drawable/rounded_button"
+        android:layout_below="@+id/et_mail"
+        android:layout_alignLeft="@+id/et_mail"
+        android:layout_alignStart="@+id/et_mail"
+        android:layout_marginTop="@dimen/padd_top"
+        android:textSize="@dimen/text_mmenu"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/but_cancel"
+        android:id="@+id/btn_cancel"
+        android:background="@drawable/rounded_button"
+        android:layout_alignTop="@+id/btn_tryRegister"
+        android:layout_alignRight="@+id/et_mail"
+        android:layout_alignEnd="@+id/et_mail"
+        android:textSize="@dimen/text_mmenu"/>
+</RelativeLayout>

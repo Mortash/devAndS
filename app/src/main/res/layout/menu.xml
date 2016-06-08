@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainMenu">
+
+    <include layout="@layout/background"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/moments2"/>
+
+    <ImageView
+        android:layout_width="75dip"
+        android:layout_height="100dip"
+        android:id="@+id/img_user"
+        android:src="@android:drawable/sym_def_app_icon"
+        android:contentDescription="User's picture"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_name"
+        android:text="name"
+        android:textSize="@dimen/text_mmenu"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@id/img_user"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_account"
+        android:id="@+id/tv_account"
+        android:textSize="@dimen/text_mmenu"
+        android:textColor="@color/textLink"
+        android:layout_below="@+id/img_user"
+        android:layout_alignRight="@+id/img_user"
+        android:layout_alignEnd="@+id/img_user"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signOut"
+        android:id="@+id/tv_disconnect"
+        android:textSize="@dimen/text_mmenu"
+        android:textColor="@color/textLink"
+        android:layout_below="@+id/tv_account"
+        android:layout_alignRight="@+id/img_user"
+        android:layout_alignEnd="@+id/img_user"
+        android:layout_marginTop="5dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:id="@+id/ll_infos"
+        android:layout_below="@+id/tv_disconnect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padd_top">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingRight="@dimen/padd_right_picto_mmenu">
+
+            <ImageButton
+                android:layout_width="@dimen/image_mmenu"
+                android:layout_height="@dimen/image_mmenu"
+                android:id="@+id/ib_photos"
+                android:src="@drawable/i_photo"
+                android:scaleType="center"
+                android:background="#00FFFFFF"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/tv_photos"
+                android:textSize="@dimen/text_mmenu"
+                android:textColor="@color/textLink" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingRight="@dimen/padd_right_picto_mmenu">
+
+            <ImageButton
+                android:layout_width="@dimen/image_mmenu"
+                android:layout_height="@dimen/image_mmenu"
+                android:id="@+id/ib_moments"
+                android:src="@drawable/i_promenade"
+                android:scaleType="center"
+                android:background="#00FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/tv_moments"
+                android:textSize="@dimen/text_mmenu"
+                android:textColor="@color/textLink" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingRight="@dimen/padd_right_picto_mmenu">
+
+            <ImageButton
+                android:layout_width="@dimen/image_mmenu"
+                android:layout_height="@dimen/image_mmenu"
+                android:id="@+id/ib_success"
+                android:src="@drawable/i_score"
+                android:scaleType="center"
+                android:background="#00FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/tv_success"
+                android:textSize="@dimen/text_mmenu"
+                android:textColor="@color/textLink" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+            <ImageButton
+                android:layout_width="@dimen/image_mmenu"
+                android:layout_height="@dimen/image_mmenu"
+                android:id="@+id/ib_friend"
+                android:src="@drawable/i_amis"
+                android:scaleType="center"
+                android:background="#00FFFFFF"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/tv_friend"
+                android:textSize="@dimen/text_mmenu"
+                android:textColor="@color/textLink" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="300dp"
+        android:layout_height="130dp"
+        android:background="@drawable/rounded_img_mmenu"
+        android:id="@+id/ib_start_moment"
+        android:layout_below="@+id/ll_infos"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/mode_promenade"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="32sp"
+        android:text="@string/moment"
+        android:gravity="center"
+        android:id="@+id/tv_start_moment"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/ib_start_moment"
+        android:layout_alignLeft="@+id/ib_start_moment"
+        android:layout_alignStart="@+id/ib_start_moment"
+        android:textColor="@color/buttonGreen"  />
+
+    <ImageButton
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_img_mmenu"
+        android:src="@drawable/mode_libre"
+        android:id="@+id/ib_start_free"
+        android:layout_below="@+id/ib_start_moment"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:scaleType="center"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="32sp"
+        android:text="@string/free_way"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:id="@+id/tv_start_free"
+        android:layout_alignBottom="@+id/ib_start_free"
+        android:layout_alignLeft="@+id/ib_start_free"
+        android:layout_alignStart="@+id/ib_start_free"
+        android:textColor="@color/buttonGreen" />
+</RelativeLayout>
