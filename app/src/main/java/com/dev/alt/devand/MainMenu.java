@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.dev.alt.devand.helper.PersonEntity;
 import com.dev.alt.devand.helper.PersonRepository;
-import com.dev.alt.devand.service.Daemon;
 
 public class MainMenu extends Activity {
 

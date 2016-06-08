@@ -7,24 +7,28 @@ import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.dev.alt.devand.camerahelper.SingleMediaScanner;
 import com.dev.alt.devand.helper.PersonEntity;
 import com.dev.alt.devand.helper.PersonRepository;
 import com.dev.alt.devand.service.receiverBroadcast;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -75,12 +79,9 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             startActivity(returnConnection);
         }*/
 
-
-        // Daemon
         Handler myHandler = new Handler(getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                Log.d("handler", "handler lancé");
                 SavePicture();
             }
         };
@@ -93,33 +94,28 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         registerReceiver(receiver, intentFilter);
 
 
-        //servDaemon = new Intent(this, Daemon.class);
-        //startService(servDaemon);
+        // Caméra
+        isPreview = false;
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        surfaceCamera = (SurfaceView) findViewById(R.id.surfaceViewCamera);
+        //SurfaceView view = new SurfaceView(this);
+        InitializeCamera();
 
-        Log.d("freeway", "service lancé");
         Button login = (Button) findViewById(R.id.btn_stopFree);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //stopService(servDaemon);
-                Log.d("freeway", "service arrété");
                 Intent i = new Intent(FreeWay.this, MainMenu.class);
                 //i.putExtra("login", pe.getLogin());
                 startActivity(i);
             }
         });
-
-        //IntentFilter filter = new IntentFilter();
-        //filter.addAction("android.media.EXTRA_VOLUME_STREAM_VALUE");
     }
 
 /*
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            Toast.makeText(getApplicationContext(), "touche appuyé",
-                    Toast.LENGTH_SHORT).show();
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
             Log.d("toast", "titi et gros minet");
             //CameraEntity ce = new CameraEntity();
             new Thread(new Runnable() {
@@ -151,16 +147,12 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         super.onDestroy();
 
         unregisterReceiver(receiver);
-        //stopService(servDaemon);
     }
 
     // méthode pour la caméra
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-    }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) {
 
         // Si le mode preview est lancé alors nous le stoppons
         if (isPreview) {
@@ -176,10 +168,10 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         camera.setParameters(parameters);
 
         try {
-            // Nous attachons notre prévisualisation de la caméra au holder de la surface
+            // Nous attachons notre prévisualisation de la caméra au holder de la
+            // surface
             camera.setPreviewDisplay(surfaceCamera.getHolder());
-        } catch (Exception e) {
-            Log.d("FreeWay", "Erreur à la mise en place du preview" + e.getMessage());
+        } catch (IOException e) {
         }
 
         // Nous lançons la preview
@@ -190,30 +182,39 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        // Nous arrêtons la camera et nous rendons la main
+        if (camera != null) {
+            camera.stopPreview();
+            isPreview = false;
+            camera.release();
+        }
+    }
+
+    public void surfaceCreated(SurfaceHolder holder) {
+        // Nous prenons le contrôle de la camera
+        if (camera == null)
+            camera = Camera.open();
     }
 
     public void InitializeCamera() {
         // Nous attachons nos retours du holder à notre activité
         surfaceCamera.getHolder().addCallback(this);
-        // Nous spécifions le type du holder en mode SURFACE_TYPE_PUSH_BUFFERS
+        // Nous spécifiions le type du holder en mode SURFACE_TYPE_PUSH_BUFFERS
         surfaceCamera.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
     }
 
     private void SavePicture() {
+
         // Callback pour la prise de photo
         Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
 
             public void onPictureTaken(byte[] data, Camera camera) {
-                for(byte b : data) {
-                    Log.d("picture", ""+ b);
-                }
 
                 if (data != null) {
-                    Log.d("picture","data not null");
                     // Enregistrement de votre image
                     try {
                         if (stream != null) {
-                            Log.d("picture","stream not null");
                             stream.write(data);
                             stream.flush();
                             stream.close();
@@ -228,42 +229,33 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         };
 
         // Initialisation
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        isPreview = false;
-        surfaceCamera = (SurfaceView) findViewById(R.id.surfaceViewCamera);
-        InitializeCamera();
-        camera = Camera.open();
+        try {
+            SimpleDateFormat timeStampFormat =  new SimpleDateFormat("yyyyMMdd_HHmmss");
+            String fileName = "photo_" + timeStampFormat.format(new Date());
+            //TODO rajouter pe.getLogin() au nom du fichier quand la connexion sera rétablie
 
-        //try {
-            SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
-            String fileName = "photo_" + timeStampFormat.format(new Date()) + ".jpg";
-
-            // Metadata pour la photo
+            /*// Metadata pour la photo
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.TITLE, fileName);
             values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
             values.put(MediaStore.Images.Media.DESCRIPTION, "Image prise par FormationCamera");
             values.put(MediaStore.Images.Media.DATE_TAKEN, new Date().getTime());
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
 
-            // Support de stockage
-            Uri taken = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+            String path = Environment.getExternalStorageDirectory().toString();
+            File file = new File(path, "/DCIM/Camera/"+fileName+".jpg");
+            stream = new FileOutputStream(file);
 
-            // Ouverture du flux pour la sauvegarde
-        try {
-            stream = (FileOutputStream) getContentResolver().openOutputStream(taken);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            Camera.Parameters params = camera.getParameters();
+            params.setJpegQuality(100);
+            camera.setParameters(params);
 
-        camera.takePicture(null, null, pictureCallback);
-        /*} catch (Exception e) {
+            camera.takePicture(null, null, pictureCallback);
+
+            //CameraEntity ce = new CameraEntity();
+            SingleMediaScanner sms = new SingleMediaScanner(getApplicationContext(), file);
+        } catch (Exception e) {
             Log.d("FreeWay", "erreur en prenant la photo :" + e.getMessage());
-        }*/
-
-        // Destruction
-        camera.stopPreview();
-        isPreview = false;
-        camera.release();
+        }
     }
 }
