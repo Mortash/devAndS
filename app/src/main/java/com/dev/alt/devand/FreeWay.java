@@ -1,13 +1,23 @@
 package com.dev.alt.devand;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,19 +26,28 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.dev.alt.devand.camerahelper.SingleMediaScanner;
 import com.dev.alt.devand.helper.PersonEntity;
 import com.dev.alt.devand.helper.PersonRepository;
 import com.dev.alt.devand.service.receiverBroadcast;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback {
+public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     //Intent servDaemon;
     private PersonEntity pe;
@@ -40,6 +59,12 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     private SurfaceView surfaceCamera;
     private Boolean isPreview;
     private FileOutputStream stream;
+
+    // GPS var
+    LocationRequest locationRequest;
+    FusedLocationProviderApi fusedLocationProviderApi;
+    GoogleApiClient googleApiClient;
+    Location located;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +173,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     // méthode pour la caméra
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
         // Si le mode preview est lancé alors nous le stoppons
         if (isPreview) {
@@ -227,7 +252,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
 
         // Initialisation
         try {
-            SimpleDateFormat timeStampFormat =  new SimpleDateFormat("yyyyMMdd_HHmmss");
+            SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String fileName = "photo_" + timeStampFormat.format(new Date());
             //TODO rajouter pe.getLogin() au nom du fichier quand la connexion sera rétablie
 
@@ -240,7 +265,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
 
             String path = Environment.getExternalStorageDirectory().toString();
-            File file = new File(path, "/DCIM/Camera/"+fileName+".jpg");
+            File file = new File(path, "/DCIM/Camera/" + fileName + ".jpg");
             stream = new FileOutputStream(file);
 
             Camera.Parameters params = camera.getParameters();
@@ -254,5 +279,58 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         } catch (Exception e) {
             Log.d("FreeWay", "erreur en prenant la photo :" + e.getMessage());
         }
+
+        //TODO Récupération GPS + sauvegarde BDD
+        // Récupération position GPS
+
+        getLocation();
+        Toast.makeText(this, "location :"+located.getLatitude()+" , "+located.getLongitude(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationProviderApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private void getLocation(){
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(150);
+        locationRequest.setFastestInterval(150);
+        fusedLocationProviderApi = LocationServices.FusedLocationApi;
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Toast.makeText(this, "location :"+location.getLatitude()+" , "+location.getLongitude(), Toast.LENGTH_SHORT).show();
+        this.located = location;
     }
 }
