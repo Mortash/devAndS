@@ -23,11 +23,17 @@ public class receiverBroadcast extends BroadcastReceiver {
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             Log.d("daemon", Intent.ACTION_SCREEN_OFF);
             // lance le Handler pour prendre la photo
-            handler.sendEmptyMessage(0);
+            if (handler != null) {
+                // lance le Handler pour prendre la photo
+                handler.sendEmptyMessage(0);
+            }
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             Log.d("daemon", Intent.ACTION_SCREEN_ON);
             // lance le Handler pour prendre la photo
-            handler.sendEmptyMessage(0);
+            if (handler != null) {
+                // lance le Handler pour prendre la photo
+                handler.sendEmptyMessage(0);
+            }
         }
 
         int event = -1;

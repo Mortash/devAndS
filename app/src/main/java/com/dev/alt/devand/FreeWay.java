@@ -1,20 +1,16 @@
 package com.dev.alt.devand;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -158,6 +154,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         if (isPreview) {
             camera.stopPreview();
         }
+
         // Nous récupérons les paramètres de la caméra
         Camera.Parameters parameters = camera.getParameters();
 
