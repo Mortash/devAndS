@@ -116,6 +116,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         surfaceCamera = (SurfaceView) findViewById(R.id.surfaceViewCamera);
         //SurfaceView view = new SurfaceView(this);
         InitializeCamera();
+        getLocation();
 
         Button login = (Button) findViewById(R.id.btn_stopFree);
         login.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +162,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        googleApiClient.disconnect();
         unregisterReceiver(receiver);
     }
 
@@ -278,7 +279,8 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         //TODO Récupération GPS + sauvegarde BDD
         // Récupération position GPS
 
-        getLocation();
+
+        //données valide
         Toast.makeText(this, "location :"+located.getLatitude()+" , "+located.getLongitude(), Toast.LENGTH_SHORT).show();
     }
 
@@ -292,6 +294,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            Log.e("Location", "requested permission");
             return;
         }
         fusedLocationProviderApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -320,12 +323,13 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
                 .build();
         if (googleApiClient != null) {
             googleApiClient.connect();
+        } else {
+            Log.e("Location", "erreur création googleApiClient");
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(this, "location :"+location.getLatitude()+" , "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         this.located = location;
     }
 }
