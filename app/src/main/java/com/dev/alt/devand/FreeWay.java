@@ -9,6 +9,7 @@ import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.dev.alt.devand.camerahelper.SingleMediaScanner;
+import com.dev.alt.devand.connectDB.ConnectPicture;
 import com.dev.alt.devand.helper.PersonEntity;
 import com.dev.alt.devand.helper.PersonRepository;
 import com.dev.alt.devand.service.receiverBroadcast;
@@ -54,6 +56,8 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     private SurfaceView surfaceCamera;
     private Boolean isPreview;
     private FileOutputStream stream;
+    protected Uri image=null;
+    Intent uploadIntent;
 
     // GPS var
     LocationRequest locationRequest;
@@ -223,6 +227,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     }
 
     private void SavePicture() {
+        getLocation();
 
         // Callback pour la prise de photo
         Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
@@ -247,21 +252,14 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         };
 
         // Initialisation
+        File file =  null;
         try {
             SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String fileName = "photo_" + timeStampFormat.format(new Date());
             //TODO rajouter pe.getLogin() au nom du fichier quand la connexion sera rétablie
 
-            /*// Metadata pour la photo
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.TITLE, fileName);
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-            values.put(MediaStore.Images.Media.DESCRIPTION, "Image prise par FormationCamera");
-            values.put(MediaStore.Images.Media.DATE_TAKEN, new Date().getTime());
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");*/
-
             String path = Environment.getExternalStorageDirectory().toString();
-            File file = new File(path, "/DCIM/Camera/" + fileName + ".jpg");
+            file = new File(path, "/DCIM/Camera/" + fileName + ".jpg");
             stream = new FileOutputStream(file);
 
             Camera.Parameters params = camera.getParameters();
@@ -271,7 +269,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             camera.takePicture(null, null, pictureCallback);
 
             //CameraEntity ce = new CameraEntity();
-            SingleMediaScanner sms = new SingleMediaScanner(getApplicationContext(), file);
+            //SingleMediaScanner sms = new SingleMediaScanner(getApplicationContext(), file);
         } catch (Exception e) {
             Log.d("FreeWay", "erreur en prenant la photo :" + e.getMessage());
         }
@@ -282,6 +280,25 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
 
         //données valide
         Toast.makeText(this, "location :"+located.getLatitude()+" , "+located.getLongitude(), Toast.LENGTH_SHORT).show();
+
+        // Enregistrement de l'image sur le serveur
+        if(file != null) {
+            image = Uri.fromFile(file);
+            uploadIntent = new Intent(FreeWay.this, ConnectPicture.class);
+            //uploadIntent.setClassName("com.dev.alt.devand", "com.dev.alt.devand.ConnectPicture");
+            uploadIntent.setData(image);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startService(uploadIntent);
+                }
+            }, 2000);
+            Log.e("UploadFromFW", "Service loadé");
+        } else {
+            Log.e("UploadFromFW", "Image null");
+        }
     }
 
     @Override
@@ -311,20 +328,22 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     }
 
     private void getLocation(){
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(150);
-        locationRequest.setFastestInterval(150);
-        fusedLocationProviderApi = LocationServices.FusedLocationApi;
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        if (googleApiClient != null) {
-            googleApiClient.connect();
-        } else {
-            Log.e("Location", "erreur création googleApiClient");
+        if(locationRequest == null) {
+            locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(150);
+            locationRequest.setFastestInterval(150);
+            fusedLocationProviderApi = LocationServices.FusedLocationApi;
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+            if (googleApiClient != null) {
+                googleApiClient.connect();
+            } else {
+                Log.e("Location", "erreur création googleApiClient");
+            }
         }
     }
 
