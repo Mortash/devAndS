@@ -1,5 +1,6 @@
 package com.dev.alt.devand;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -7,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -26,10 +25,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.dev.alt.devand.camerahelper.SingleMediaScanner;
 import com.dev.alt.devand.connectDB.ConnectPicture;
-import com.dev.alt.devand.helper.PersonEntity;
-import com.dev.alt.devand.helper.PersonRepository;
+import com.dev.alt.devand.entities.PersonEntity;
+import com.dev.alt.devand.entities.PersonRepository;
 import com.dev.alt.devand.service.receiverBroadcast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -118,7 +116,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         isPreview = false;
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         surfaceCamera = (SurfaceView) findViewById(R.id.surfaceViewCamera);
-        //SurfaceView view = new SurfaceView(this);
+        //SurfaceView view = new SurfaceView(this);  // Piste pour éviter la preview ?
         InitializeCamera();
         getLocation();
 
@@ -132,24 +130,6 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             }
         });
     }
-
-/*
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
-            Log.d("toast", "titi et gros minet");
-            //CameraEntity ce = new CameraEntity();
-            new Thread(new Runnable() {
-                public void run() {
-                    // Nous prenons une photo
-                    if (camera != null) {
-                        SavePicture();
-                    }
-                }
-            }).start();
-        }
-        return true;
-    }*/
 
     // Retour sur l'application
     @Override
@@ -171,7 +151,6 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     }
 
     // méthode pour la caméra
-
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
@@ -190,15 +169,14 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         camera.setParameters(parameters);
 
         try {
-            // Nous attachons notre prévisualisation de la caméra au holder de la
-            // surface
+            // Nous attachons notre prévisualisation de la caméra au holder de la surface
             camera.setPreviewDisplay(surfaceCamera.getHolder());
         } catch (IOException e) {
+            Log.e("camera",e.getMessage());
         }
 
         // Nous lançons la preview
         camera.startPreview();
-
         isPreview = true;
     }
 
@@ -243,6 +221,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
                             stream.close();
                         }
                     } catch (Exception e) {
+                        Log.e(this.getClass().getSimpleName(),e.getMessage()+"");
                     }
 
                     // Nous redémarrons la prévisualisation
@@ -254,7 +233,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         // Initialisation
         File file =  null;
         try {
-            SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String fileName = pe.getLogin() + "_" + timeStampFormat.format(new Date());
 
             String path = Environment.getExternalStorageDirectory().toString();
@@ -266,9 +245,6 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             camera.setParameters(params);
 
             camera.takePicture(null, null, pictureCallback);
-
-            //CameraEntity ce = new CameraEntity();
-            //SingleMediaScanner sms = new SingleMediaScanner(getApplicationContext(), file);
         } catch (Exception e) {
             Log.d("FreeWay", "erreur en prenant la photo :" + e.getMessage());
         }

@@ -9,7 +9,6 @@ import android.util.Log;
 public class receiverBroadcast extends BroadcastReceiver {
 
     boolean b = true;
-    String a ="";
     private Handler handler;
 
     public receiverBroadcast(Handler handler) {
@@ -19,7 +18,7 @@ public class receiverBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
+        //TODO possible d'améliorer l'algorithme
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             Log.d("daemon", Intent.ACTION_SCREEN_OFF);
             // lance le Handler pour prendre la photo
@@ -42,9 +41,7 @@ public class receiverBroadcast extends BroadcastReceiver {
                     .getExtras().get("android.media.EXTRA_VOLUME_STREAM_TYPE");
         }
 
-        if(event == -1) {
-            return;
-        } else {
+        if(event != -1) {
             if(b) {
                 Log.e("broadcast", "broadcasté !!!");
                 if (handler != null) {

@@ -12,8 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.dev.alt.devand.helper.PersonEntity;
-import com.dev.alt.devand.helper.PersonRepository;
+import com.dev.alt.devand.entities.PersonEntity;
+import com.dev.alt.devand.entities.PersonRepository;
+import com.dev.alt.devand.helper.Crypto;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,14 +32,8 @@ public class Registration extends Activity {
     // Progress Dialog
     private ProgressDialog pDialog;
 
-    // url to get all products list
-    private static String url_connection = "http://alt.moments.free.fr/requests/create_user.php";
-
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_MESSAGE = "message";
     private static final String TAG_MAIL = "mail";
-    private static final String SALAGE = "alt";
-    private static final String TAG_LOGIN = "login";
     private static final String TAG_SOCIALKEY = "socialKey";
 
     // Creating JSON Parser object
@@ -54,10 +49,10 @@ public class Registration extends Activity {
         pass.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
+                //final int DRAWABLE_LEFT = 0;
+                //final int DRAWABLE_TOP = 1;
                 final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
+                //final int DRAWABLE_BOTTOM = 3;
 
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
                     if(event.getRawX() >= (pass.getRight() - 10 - pass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -80,10 +75,10 @@ public class Registration extends Activity {
         Cpass.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
+                //final int DRAWABLE_LEFT = 0;
+                //final int DRAWABLE_TOP = 1;
                 final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
+                //final int DRAWABLE_BOTTOM = 3;
 
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
                     if(event.getRawX() >= (Cpass.getRight() - 10 - Cpass.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -157,15 +152,16 @@ public class Registration extends Activity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("login", login));
-            params.add(new BasicNameValuePair("pass", get_SHA_512_SecurePassword(password)));
+            params.add(new BasicNameValuePair("pass", Crypto.get_SHA_512_SecurePassword(password)));
             params.add(new BasicNameValuePair("mail", mail));
 
             // getting JSON string from URL
+            String url_connection = "http://alt.moments.free.fr/requests/create_user.php";
             JSONObject json=jParser.makeHttpRequest(url_connection, "POST", params);
             try {
                 Log.e("registration", json.getString("message") + " ");
             } catch(Exception e) {
-
+                Log.e(this.getClass().getSimpleName(),e.getMessage());
             }
             // Check your log cat for JSON response
             try {
@@ -190,6 +186,7 @@ public class Registration extends Activity {
                     i.putExtra("login", login);
                     startActivity(i);
                 } else {
+                    Log.d(this.getClass().getSimpleName(),"Enregistrement échoué, veuillez réessayez");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -209,27 +206,6 @@ public class Registration extends Activity {
                 public void run() {
                 }
             });
-        }
-
-        public String get_SHA_512_SecurePassword(String passwordToHash){
-            String generatedPassword = null;
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA-512");
-                md.update(SALAGE.getBytes("UTF-8"));
-                byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                for(int i=0; i< bytes.length ;i++){
-                    sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-                }
-                generatedPassword = sb.toString();
-            }
-            catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            catch (NoSuchAlgorithmException e){
-                e.printStackTrace();
-            }
-            return generatedPassword;
         }
     }
 }

@@ -2,7 +2,6 @@ package com.dev.alt.devand.connectDB;
 
 import android.app.Service;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,9 +19,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dev.alt.devand.JSONParser;
-import com.dev.alt.devand.MainMenu;
-import com.dev.alt.devand.helper.PersonEntity;
-import com.dev.alt.devand.helper.PersonRepository;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -97,7 +93,7 @@ public class ConnectPicture extends Service {
             Log.i(getClass().getSimpleName(), "Done with #" + msg.arg1);
             stopSelf(msg.arg1);
         }
-    };
+    }
 
     // Method called when (an instance of) the Service is created
     public void onCreate() {
@@ -164,6 +160,7 @@ public class ConnectPicture extends Service {
                 photofile = c.getString(1); //column1Value
                 Log.e(getClass().getSimpleName(),"Data : " +pathfile);
                 Log.e(getClass().getSimpleName(),"Display name : " + photofile);
+                c.close();
             }
 
             try {
@@ -211,7 +208,9 @@ public class ConnectPicture extends Service {
             Log.e(getClass().getSimpleName(),"Headers are written");
 
             //compression de image pour envoi
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 75, dos);
+            if (mBitmap != null) {
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, 75, dos);
+            }
 
             // send multipart form data necesssary after file data...
             dos.writeBytes(lineEnd);
@@ -219,7 +218,9 @@ public class ConnectPicture extends Service {
 
 
             // close streams
-            fis.close();
+            if (fis != null) {
+                fis.close();
+            }
             dos.flush();
             dos.close();
             Log.e("fileUpload","File is written on the queue");
@@ -241,16 +242,21 @@ public class ConnectPicture extends Service {
 
         //lecture de la réponse http
         try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            Log.i(getClass().getSimpleName(),"try HTTP reponse");
-            while ((httpResponse = rd.readLine()) != null) {
-                Log.i(getClass().getSimpleName(),"HTTP reponse= " + httpResponse);
-                if(httpResponse.contains("error")) {
-                    //there is a http error
-                    check += 1;
-                }
+            BufferedReader rd = null;
+            if (conn != null) {
+                rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             }
-            rd.close();
+            Log.i(getClass().getSimpleName(),"try HTTP reponse");
+            if (rd != null) {
+                while ((httpResponse = rd.readLine()) != null) {
+                    Log.i(getClass().getSimpleName(),"HTTP reponse= " + httpResponse);
+                    if(httpResponse.contains("error")) {
+                        //there is a http error
+                        check += 1;
+                    }
+                }
+                rd.close();
+            }
         } catch (IOException ioex) {
             Log.e("HttpUploader", "error: " + ioex.getMessage(), ioex);
             ioex.printStackTrace();

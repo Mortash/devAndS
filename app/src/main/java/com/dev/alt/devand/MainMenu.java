@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.dev.alt.devand.helper.PersonEntity;
-import com.dev.alt.devand.helper.PersonRepository;
+import com.dev.alt.devand.entities.PersonEntity;
+import com.dev.alt.devand.entities.PersonRepository;
 
 public class MainMenu extends Activity {
 

@@ -1,27 +1,20 @@
 package com.dev.alt.devand;
 
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.dev.alt.devand.helper.PersonEntity;
-import com.dev.alt.devand.helper.PersonRepository;
-
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.dev.alt.devand.entities.PersonEntity;
+import com.dev.alt.devand.entities.PersonRepository;
+import com.dev.alt.devand.helper.Crypto;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,8 +24,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.facebook.FacebookSdk;
-
 public class Connection extends AppCompatActivity {
 
     private PersonEntity pe;
@@ -41,15 +32,9 @@ public class Connection extends AppCompatActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
 
-    // url to get all products list
-    private static String url_connection = "http://alt.moments.free.fr/requests/identify_user.php";
-
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_MESSAGE = "MESSAGE";
-    private static final String TAG_LOGIN = "login";
     private static final String TAG_MAIL = "mail";
     private static final String TAG_SOCIALKEY = "socialKey";
-    private static final String SALAGE = "alt";
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
@@ -64,9 +49,7 @@ public class Connection extends AppCompatActivity {
         pr = new PersonRepository(getApplicationContext());
         pe = null;
 
-        //TODO: récupérer la dernière personne connecté, et si elle a toujouts pe.getLoggedIn()==1 alors lancer directement le MainMenu avec lui.
-
-        Bundle extras = getIntent().getExtras();
+        //TODO: récupérer la dernière personne connecté, et si elle a toujours pe.getLoggedIn()==1 alors lancer directement le MainMenu avec lui.
 
         setContentView(R.layout.login);
 
@@ -125,9 +108,10 @@ public class Connection extends AppCompatActivity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("login", login));
-            params.add(new BasicNameValuePair("pass", get_SHA_512_SecurePassword(password)));
+            params.add(new BasicNameValuePair("pass", Crypto.get_SHA_512_SecurePassword(password)));
 
             // getting JSON string from URL
+            String url_connection = "http://alt.moments.free.fr/requests/identify_user.php";
             JSONObject json = jParser.makeHttpRequest(url_connection, "POST", params);
 
             // Check your log cat for JSON response
@@ -154,6 +138,7 @@ public class Connection extends AppCompatActivity {
                     startActivity(i);
                 } else {
                     //TODO ajouter des messages d'erreur suivant le TAG_MESSAGE
+                    Toast.makeText(Connection.this, "erreur", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -173,25 +158,6 @@ public class Connection extends AppCompatActivity {
             //    public void run() {
             //   }
             //});
-        }
-
-        public String get_SHA_512_SecurePassword(String passwordToHash) {
-            String generatedPassword = null;
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA-512");
-                md.update(SALAGE.getBytes("UTF-8"));
-                byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < bytes.length; i++) {
-                    sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-                }
-                generatedPassword = sb.toString();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            return generatedPassword;
         }
     }
 }
