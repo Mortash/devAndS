@@ -20,6 +20,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dev.alt.devand.JSONParser;
+import com.dev.alt.devand.MainMenu;
+import com.dev.alt.devand.helper.PersonEntity;
+import com.dev.alt.devand.helper.PersonRepository;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -30,6 +38,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ConnectPicture extends Service {
 
@@ -57,6 +69,13 @@ public class ConnectPicture extends Service {
     private Intent mInvokeIntent;
     private volatile Looper mUploadLooper;
     private volatile ServiceHandler mUploadHandler;
+    JSONParser jParser = new JSONParser();
+
+    private static final String TAG_SUCCESS = "success";
+
+    private String login;
+    private Double latitude;
+    private Double longitude;
 
     private int check = 0;
 
@@ -113,7 +132,9 @@ public class ConnectPicture extends Service {
 
         // Check if the user is connected
         if (extras != null) {
-            String login = extras.getString("login");
+            login = extras.getString("login");
+            latitude = extras.getDouble("latitude");
+            longitude = extras.getDouble("longitude");
         }
     }
 
@@ -190,11 +211,12 @@ public class ConnectPicture extends Service {
             Log.e(getClass().getSimpleName(),"Headers are written");
 
             //compression de image pour envoi
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, dos);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 75, dos);
 
             // send multipart form data necesssary after file data...
             dos.writeBytes(lineEnd);
             dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
 
             // close streams
             fis.close();
@@ -236,5 +258,35 @@ public class ConnectPicture extends Service {
             Log.i(getClass().getSimpleName(),"échec de lecture de la réponse du site web");
         }
 
+        /*
+         * Save bdd
+         */
+        // Building Parameters
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        // send others
+        params.add(new BasicNameValuePair("takendate", (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date())));
+        params.add(new BasicNameValuePair("state", "1"));
+        params.add(new BasicNameValuePair("autolocation", "true"));
+        params.add(new BasicNameValuePair("latitude", ""+latitude));
+        params.add(new BasicNameValuePair("longitude", ""+longitude));
+        params.add(new BasicNameValuePair("login", login));
+        params.add(new BasicNameValuePair("pathpicture", "picture/" + filename));
+
+        // getting JSON string from URL
+        JSONObject json = jParser.makeHttpRequest("http://alt.moments.free.fr/requests/save_bdd_picture.php", "POST", params);
+        Log.e("json", json.toString());
+        // Check your log cat for JSON response
+        try {
+            // Checking for SUCCESS TAG
+            int success = json.getInt(TAG_SUCCESS);
+
+            if (success == 1) {
+                Log.e("BDDsave","Sauvegarde réussi");
+            } else {
+                //TODO ajouter des messages d'erreur suivant le TAG_MESSAGE
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

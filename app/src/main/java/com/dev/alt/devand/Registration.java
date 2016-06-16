@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -160,8 +161,12 @@ public class Registration extends Activity {
             params.add(new BasicNameValuePair("mail", mail));
 
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_connection, "POST", params);
+            JSONObject json=jParser.makeHttpRequest(url_connection, "POST", params);
+            try {
+                Log.e("registration", json.getString("message") + " ");
+            } catch(Exception e) {
 
+            }
             // Check your log cat for JSON response
             try {
                 // Checking for SUCCESS TAG

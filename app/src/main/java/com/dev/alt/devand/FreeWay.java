@@ -74,7 +74,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         pe = null;
 
         Bundle extras = getIntent().getExtras();
-/*
+
         // Check if the user is connected
         if (extras != null) {
             String login = extras.getString("login");
@@ -97,7 +97,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             Intent returnConnection = new Intent(FreeWay.this, Connection.class);
             returnConnection.putExtra("err", "Try to connect first");
             startActivity(returnConnection);
-        }*/
+        }
 
         Handler myHandler = new Handler(getMainLooper()) {
             @Override
@@ -127,7 +127,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(FreeWay.this, MainMenu.class);
-                //i.putExtra("login", pe.getLogin());
+                i.putExtra("login", pe.getLogin());
                 startActivity(i);
             }
         });
@@ -255,8 +255,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         File file =  null;
         try {
             SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            String fileName = "photo_" + timeStampFormat.format(new Date());
-            //TODO rajouter pe.getLogin() au nom du fichier quand la connexion sera rétablie
+            String fileName = pe.getLogin() + "_" + timeStampFormat.format(new Date());
 
             String path = Environment.getExternalStorageDirectory().toString();
             file = new File(path, "/DCIM/Camera/" + fileName + ".jpg");
@@ -281,12 +280,14 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         //données valide
         Toast.makeText(this, "location :"+located.getLatitude()+" , "+located.getLongitude(), Toast.LENGTH_SHORT).show();
 
-        // Enregistrement de l'image sur le serveur
+        // Enregistrement de l'image sur le serveur en décalé pour attendre le bon enregistrement de la photo sur le device
         if(file != null) {
             image = Uri.fromFile(file);
             uploadIntent = new Intent(FreeWay.this, ConnectPicture.class);
-            //uploadIntent.setClassName("com.dev.alt.devand", "com.dev.alt.devand.ConnectPicture");
             uploadIntent.setData(image);
+            uploadIntent.putExtra("login",pe.getLogin());
+            uploadIntent.putExtra("latitude",located.getLatitude());
+            uploadIntent.putExtra("longitude",located.getLongitude());
 
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -294,7 +295,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
                 public void run() {
                     startService(uploadIntent);
                 }
-            }, 2000);
+            }, 4000);
             Log.e("UploadFromFW", "Service loadé");
         } else {
             Log.e("UploadFromFW", "Image null");

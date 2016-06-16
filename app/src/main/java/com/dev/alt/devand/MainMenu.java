@@ -3,7 +3,6 @@ package com.dev.alt.devand;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,7 +21,7 @@ public class MainMenu extends Activity {
         setContentView(R.layout.menu);
 
         // Permets de bypass le login
-        /*pr = new PersonRepository(getApplicationContext());
+        pr = new PersonRepository(getApplicationContext());
         pe = null;
         Bundle extras = getIntent().getExtras();
 
@@ -53,7 +52,7 @@ public class MainMenu extends Activity {
         // Update the username
         TextView name = (TextView) findViewById(R.id.tv_name);
         name.setText(pe.getLogin());
-        */
+
 
         // Bind components
         TextView login = (TextView) findViewById(R.id.tv_disconnect);
@@ -73,7 +72,7 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v) {
 
-                //Intent logAction = new Intent(MainMenu.this, FreeWay.class);
+                //Intent logAction = new Intent(MainMenu.this, .class);
                 //startService(logAction);
             }
         });
@@ -84,7 +83,7 @@ public class MainMenu extends Activity {
             public void onClick(View v) {
 
                 Intent freeIntent = new Intent(MainMenu.this, FreeWay.class);
-                //freeIntent.putExtra("login", pe.getLogin());
+                freeIntent.putExtra("login", pe.getLogin());
                 startActivity(freeIntent);
             }
         });
