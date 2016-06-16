@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.dev.alt.devand.helper.PersonEntity;
@@ -28,6 +30,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.facebook.FacebookSdk;
 
 public class Connection extends AppCompatActivity {
 
@@ -49,6 +53,9 @@ public class Connection extends AppCompatActivity {
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
+
+    //Facebook variables
+    private String String_APP_ID = getString(R.string.facebook_app_id);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +87,21 @@ public class Connection extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        ImageButton loginFB = (ImageButton) findViewById(R.id.imgBtn_tryLoginFb);
+        loginFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               //loginToFacebook();
+            }
+        });
+
     }
 
     class ConnectUser extends AsyncTask<String, String, String> {
         private String login;
         private String password;
+
         protected ConnectUser(String l, String p) {
             this.login = l;
             this.password = p;
@@ -154,7 +171,7 @@ public class Connection extends AppCompatActivity {
 
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after response
             pDialog.dismiss();
@@ -165,22 +182,20 @@ public class Connection extends AppCompatActivity {
             //});
         }
 
-        public String get_SHA_512_SecurePassword(String passwordToHash){
+        public String get_SHA_512_SecurePassword(String passwordToHash) {
             String generatedPassword = null;
             try {
                 MessageDigest md = MessageDigest.getInstance("SHA-512");
                 md.update(SALAGE.getBytes("UTF-8"));
                 byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
                 StringBuilder sb = new StringBuilder();
-                for(int i=0; i< bytes.length ;i++){
+                for (int i = 0; i < bytes.length; i++) {
                     sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
                 }
                 generatedPassword = sb.toString();
-            }
-            catch (UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-            }
-            catch (NoSuchAlgorithmException e){
+            } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             return generatedPassword;
