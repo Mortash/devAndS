@@ -19,6 +19,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dev.alt.devand.JSONParser;
+import com.dev.alt.devand.entities.DataBaseRepository;
+import com.dev.alt.devand.entities.PictureEntity;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -40,9 +42,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ConnectPicture extends Service {
-
-    public ConnectPicture() {
-    }
+    private DataBaseRepository pr;
 
     @Nullable
     @Override
@@ -97,6 +97,7 @@ public class ConnectPicture extends Service {
 
     // Method called when (an instance of) the Service is created
     public void onCreate() {
+        pr = new DataBaseRepository(getApplicationContext());
         Log.e("ConnectPicture","ConnectPicture on create");
 
         // This is who should be launched if the user selects our persistent
@@ -116,6 +117,7 @@ public class ConnectPicture extends Service {
     }
 
     public void onStart(Intent uploadintent, int startId) {
+        pr = new DataBaseRepository(getApplicationContext());
         // recup des data pour envoi via msg dans la msgqueue pour traitement
         Message msg = mUploadHandler.obtainMessage();
         msg.arg1 = startId;
@@ -182,7 +184,7 @@ public class ConnectPicture extends Service {
 
         } else Log.d(getClass().getSimpleName(),"myImage is null");
 
-
+        // Enregistrement sur le serveur
 
         try {
             URL site = new URL(urlString);
@@ -200,12 +202,8 @@ public class ConnectPicture extends Service {
             DataOutputStream dos = new DataOutputStream( conn.getOutputStream() );
 
             dos.writeBytes(twoHyphens + boundary + lineEnd);
-            Log.e(getClass().getSimpleName(),"Display name : " + photofile);
-            Log.e(getClass().getSimpleName(),"Filename : " + filename);
             dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + filename + "\"" + lineEnd);
             dos.writeBytes(lineEnd);
-
-            Log.e(getClass().getSimpleName(),"Headers are written");
 
             //compression de image pour envoi
             if (mBitmap != null) {
@@ -223,8 +221,6 @@ public class ConnectPicture extends Service {
             }
             dos.flush();
             dos.close();
-            Log.e("fileUpload","File is written on the queue");
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Toast.makeText(ConnectPicture.this, "échec de connexion au site web ", Toast.LENGTH_SHORT).show();
@@ -246,7 +242,7 @@ public class ConnectPicture extends Service {
             if (conn != null) {
                 rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             }
-            Log.i(getClass().getSimpleName(),"try HTTP reponse");
+
             if (rd != null) {
                 while ((httpResponse = rd.readLine()) != null) {
                     Log.i(getClass().getSimpleName(),"HTTP reponse= " + httpResponse);
@@ -270,7 +266,8 @@ public class ConnectPicture extends Service {
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         // send others
-        params.add(new BasicNameValuePair("takendate", (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date())));
+        String takendate = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date());
+        params.add(new BasicNameValuePair("takendate", takendate));
         params.add(new BasicNameValuePair("state", "1"));
         params.add(new BasicNameValuePair("autolocation", "true"));
         params.add(new BasicNameValuePair("latitude", ""+latitude));
@@ -283,8 +280,11 @@ public class ConnectPicture extends Service {
         Log.e("json", json.toString());
         // Check your log cat for JSON response
         try {
+
             // Checking for SUCCESS TAG
             int success = json.getInt(TAG_SUCCESS);
+            PictureEntity pe = new PictureEntity(json.getInt("idpicture"),-1,takendate,true,"picture/" + filename,latitude,longitude,login);
+            pr.addPicture(pe);
 
             if (success == 1) {
                 Log.e("BDDsave","Sauvegarde réussi");

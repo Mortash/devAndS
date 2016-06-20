@@ -33,7 +33,8 @@
         </activity>
         <activity android:name=".MainMenu" />
         <activity android:name=".Registration" />
-        <activity android:name=".FreeWay"></activity>
+        <activity android:name=".FreeWay"/>
+        <activity android:name=".CheckPicture"/>
 
         <service android:name=".connectDB.ConnectPicture"
             android:process=":player" />

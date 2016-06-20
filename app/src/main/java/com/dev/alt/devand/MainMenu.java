@@ -8,12 +8,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.dev.alt.devand.entities.PersonEntity;
-import com.dev.alt.devand.entities.PersonRepository;
+import com.dev.alt.devand.entities.DataBaseRepository;
 
 public class MainMenu extends Activity {
 
     private PersonEntity pe;
-    PersonRepository pr;
+    DataBaseRepository pr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class MainMenu extends Activity {
         setContentView(R.layout.menu);
 
         // Permets de bypass le login
-        pr = new PersonRepository(getApplicationContext());
+        pr = new DataBaseRepository(getApplicationContext());
         pe = null;
         Bundle extras = getIntent().getExtras();
 

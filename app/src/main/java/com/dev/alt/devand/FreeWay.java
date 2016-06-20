@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 import com.dev.alt.devand.connectDB.ConnectPicture;
 import com.dev.alt.devand.entities.PersonEntity;
-import com.dev.alt.devand.entities.PersonRepository;
+import com.dev.alt.devand.entities.DataBaseRepository;
 import com.dev.alt.devand.service.receiverBroadcast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,9 +44,8 @@ import java.util.Date;
 
 public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    //Intent servDaemon;
     private PersonEntity pe;
-    PersonRepository pr;
+    DataBaseRepository pr;
     BroadcastReceiver receiver;
 
     // photo vars
@@ -68,7 +67,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free_way);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        pr = new PersonRepository(getApplicationContext());
+        pr = new DataBaseRepository(getApplicationContext());
         pe = null;
 
         Bundle extras = getIntent().getExtras();
@@ -124,7 +123,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FreeWay.this, MainMenu.class);
+                Intent i = new Intent(FreeWay.this, CheckPicture.class);
                 i.putExtra("login", pe.getLogin());
                 startActivity(i);
             }
@@ -252,7 +251,6 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         //TODO Récupération GPS + sauvegarde BDD
         // Récupération position GPS
 
-
         //données valide
         Toast.makeText(this, "location :"+located.getLatitude()+" , "+located.getLongitude(), Toast.LENGTH_SHORT).show();
 
@@ -272,7 +270,6 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
                     startService(uploadIntent);
                 }
             }, 4000);
-            Log.e("UploadFromFW", "Service loadé");
         } else {
             Log.e("UploadFromFW", "Image null");
         }

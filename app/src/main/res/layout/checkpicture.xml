@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CheckPicture"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/background"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView3"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/moments2"/>
+
+    <ImageView
+        android:layout_width="75dip"
+        android:layout_height="100dip"
+        android:id="@+id/img_user2"
+        android:src="@android:drawable/sym_def_app_icon"
+        android:contentDescription="User's picture"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_name"
+        android:text="name"
+        android:textSize="@dimen/text_mmenu"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@id/img_user2"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_account"
+        android:id="@+id/tv_account"
+        android:textSize="@dimen/text_mmenu"
+        android:textColor="@color/textLink"
+        android:layout_below="@+id/img_user2"
+        android:layout_alignRight="@+id/img_user2"
+        android:layout_alignEnd="@+id/img_user2"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signOut"
+        android:id="@+id/tv_disconnect"
+        android:textSize="@dimen/text_mmenu"
+        android:textColor="@color/textLink"
+        android:layout_below="@+id/tv_account"
+        android:layout_alignRight="@+id/img_user2"
+        android:layout_alignEnd="@+id/img_user2"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:id="@+id/iv_imagePreview"
+        android:layout_below="@+id/tv_disconnect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padd_top" />
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_commentaire"
+        android:hint="@string/commentaire"
+        android:layout_below="@+id/iv_imagePreview"
+        android:layout_alignLeft="@+id/iv_imagePreview"
+        android:layout_alignStart="@+id/iv_imagePreview"
+        android:layout_marginTop="18dp" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/ib_check"
+        android:layout_below="@+id/et_commentaire"
+        android:layout_alignLeft="@+id/et_commentaire"
+        android:layout_alignStart="@+id/et_commentaire"
+        android:layout_marginTop="23dp"
+        android:src="@drawable/icon_check"/>
+
+    <ImageButton
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:id="@+id/ib_uncheck"
+        android:layout_alignTop="@+id/ib_check"
+        android:layout_alignRight="@+id/et_commentaire"
+        android:layout_alignEnd="@+id/et_commentaire"
+        android:src="@drawable/icon_uncheck"/>
+
+
+</RelativeLayout>

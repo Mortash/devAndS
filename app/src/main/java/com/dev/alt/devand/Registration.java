@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dev.alt.devand.entities.PersonEntity;
-import com.dev.alt.devand.entities.PersonRepository;
+import com.dev.alt.devand.entities.DataBaseRepository;
 import com.dev.alt.devand.helper.Crypto;
 
 import org.apache.http.NameValuePair;
@@ -21,9 +21,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,7 +171,7 @@ public class Registration extends Activity {
                             json.getString(TAG_SOCIALKEY),
                             1);
 
-                    PersonRepository pr = new PersonRepository(getApplicationContext());
+                    DataBaseRepository pr = new DataBaseRepository(getApplicationContext());
 
                     if(pr.existPerson(login)) {
                         pr.updatePerson(pe);

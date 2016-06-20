@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.alt.devand.entities.PersonEntity;
-import com.dev.alt.devand.entities.PersonRepository;
+import com.dev.alt.devand.entities.DataBaseRepository;
 import com.dev.alt.devand.helper.Crypto;
 
 import org.apache.http.NameValuePair;
@@ -27,7 +27,7 @@ import java.util.List;
 public class Connection extends AppCompatActivity {
 
     private PersonEntity pe;
-    PersonRepository pr;
+    DataBaseRepository pr;
 
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -40,13 +40,14 @@ public class Connection extends AppCompatActivity {
     JSONParser jParser = new JSONParser();
 
     //Facebook variables
-    private String String_APP_ID = getString(R.string.facebook_app_id);
+    //private String String_APP_ID = getString(R.string.facebook_app_id);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pr = new PersonRepository(getApplicationContext());
+        // Init DB
+        pr = new DataBaseRepository(getApplicationContext());
         pe = null;
 
         //TODO: récupérer la dernière personne connecté, et si elle a toujours pe.getLoggedIn()==1 alors lancer directement le MainMenu avec lui.
@@ -125,7 +126,7 @@ public class Connection extends AppCompatActivity {
                             json.getString(TAG_SOCIALKEY),
                             1);
 
-                    PersonRepository pr = new PersonRepository(getApplicationContext());
+                    DataBaseRepository pr = new DataBaseRepository(getApplicationContext());
 
                     if(pr.existPerson(login)) {
                         pr.updatePerson(pe);

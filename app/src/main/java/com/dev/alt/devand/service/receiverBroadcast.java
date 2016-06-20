@@ -43,7 +43,6 @@ public class receiverBroadcast extends BroadcastReceiver {
 
         if(event != -1) {
             if(b) {
-                Log.e("broadcast", "broadcasté !!!");
                 if (handler != null) {
                     // lance le Handler pour prendre la photo
                     handler.sendEmptyMessage(0);
