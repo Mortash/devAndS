@@ -37,7 +37,11 @@
         <activity android:name=".CheckPicture"/>
 
         <service android:name=".connectDB.ConnectPicture"
-            android:process=":player" />
+            android:exported="false"/>
+        <service android:name=".connectDB.UpdatePicture"
+            android:exported="false" />
+        <service android:name=".connectDB.DeletePicture"
+            android:exported="false" />
 
         <!-- bdd -->
 

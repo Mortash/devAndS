@@ -13,13 +13,16 @@ public class PictureEntity {
     private double _latitude;
     private double _longitude;
     private String _login;
+    private String _comment;
 
     // Empty constructor
     public PictureEntity(){
     }
 
     // constructor
-    public PictureEntity(int idpicture, int idwalk, String takendate, boolean autolocation, String pathpicture, double latitude, double longitude, String login){
+    public PictureEntity(int idpicture, int idwalk, String takendate, boolean autolocation,
+                         String pathpicture, double latitude, double longitude, String login,
+                         String comment){
         this._idpicture = idpicture;
         this._idwalk = idwalk;
         this._takendate = takendate;
@@ -28,6 +31,7 @@ public class PictureEntity {
         this._latitude = latitude;
         this._longitude = longitude;
         this._login = login;
+        this._comment = comment;
     }
 
     public int getIdPicture() {
@@ -47,14 +51,14 @@ public class PictureEntity {
     public String getTakendate() {
         return _takendate;
     }
-    public void setString(String takendate) {
+    public void setTekenDate(String takendate) {
         this._takendate = takendate;
     }
 
     public boolean getAutolocation() {
         return _autolocation;
     }
-    public void set(boolean autolocation) {
+    public void setAutolocation(boolean autolocation) {
         this._autolocation = autolocation;
     }
 
@@ -84,5 +88,12 @@ public class PictureEntity {
     }
     public void setLogin(String login) {
         this._login = login;
+    }
+
+    public String getComment() {
+        return _comment;
+    }
+    public void setComment(String comment) {
+        this._comment = comment;
     }
 }

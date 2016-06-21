@@ -19,5 +19,6 @@
     <string name="moment">Moment</string>
     <string name="stop_mode">Stop Mode</string>
     <string name="facebook_app_id">245759762465053</string>
-    <string name="commentaire">Commentaire</string>
+    <string name="comment">Commentaire</string>
+    <string name="do_nothing">Do nothing</string>
 </resources>

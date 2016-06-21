@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.location.Criteria;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
@@ -69,7 +70,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         pr = new DataBaseRepository(getApplicationContext());
         pe = null;
-
+        located = null;
         Bundle extras = getIntent().getExtras();
 
         // Check if the user is connected
@@ -123,6 +124,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                googleApiClient.disconnect();
                 Intent i = new Intent(FreeWay.this, CheckPicture.class);
                 i.putExtra("login", pe.getLogin());
                 startActivity(i);
@@ -146,7 +148,11 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
     public void onDestroy() {
         super.onDestroy();
         googleApiClient.disconnect();
-        unregisterReceiver(receiver);
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
+            Log.e("FreeWay","Impossible de supprimer le receiver");
+        }
     }
 
     // méthode pour la caméra
@@ -248,11 +254,13 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             Log.d("FreeWay", "erreur en prenant la photo :" + e.getMessage());
         }
 
-        //TODO Récupération GPS + sauvegarde BDD
         // Récupération position GPS
 
         //données valide
-        Toast.makeText(this, "location :"+located.getLatitude()+" , "+located.getLongitude(), Toast.LENGTH_SHORT).show();
+        if(located==null) {
+            this.onConnected(null);
+        }
+        Toast.makeText(this, "location :" + located.getLatitude() + " , " + located.getLongitude(), Toast.LENGTH_SHORT).show();
 
         // Enregistrement de l'image sur le serveur en décalé pour attendre le bon enregistrement de la photo sur le device
         if(file != null) {

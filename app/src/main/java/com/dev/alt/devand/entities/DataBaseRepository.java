@@ -36,6 +36,7 @@ public class DataBaseRepository extends SQLiteOpenHelper {
     private static final String KEY_PATHPICTURE = "pathpicture";
     private static final String KEY_LATITUDE = "latitude";
     private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_COMMENT = "comment";
 
     // Table Create Statements
     private static final String CREATE_TABLE_PERSON = "CREATE TABLE IF NOT EXISTS "
@@ -52,7 +53,8 @@ public class DataBaseRepository extends SQLiteOpenHelper {
             + KEY_PATHPICTURE + " TEXT,"
             + KEY_LATITUDE + " DOUBLE,"
             + KEY_LONGITUDE + " DOUBLE,"
-            + KEY_LOGIN + " TEXT);";
+            + KEY_LOGIN + " TEXT,"
+            + KEY_COMMENT + " TEXT);";
 
     public DataBaseRepository(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -174,6 +176,7 @@ public class DataBaseRepository extends SQLiteOpenHelper {
         values.put(KEY_LATITUDE, picture.getLatitude());
         values.put(KEY_LONGITUDE, picture.getLongitude());
         values.put(KEY_LOGIN, picture.getLogin());
+        values.put(KEY_COMMENT, picture.getComment());
 
         // Inserting Row
         db.insert(TABLE_PICTURE, null, values);
@@ -186,7 +189,7 @@ public class DataBaseRepository extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(TABLE_PICTURE, new String[] { KEY_IDPICTURE, KEY_IDWALK,
                         KEY_TAKENDATE, KEY_AUTOLOCATION, KEY_PATHPICTURE, KEY_LATITUDE,
-                        KEY_LONGITUDE, KEY_LOGIN }, KEY_IDPICTURE + "=?",
+                        KEY_LONGITUDE, KEY_LOGIN, KEY_COMMENT }, KEY_IDPICTURE + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
 
         if (cursor.getCount() != 0)
@@ -198,7 +201,7 @@ public class DataBaseRepository extends SQLiteOpenHelper {
 
         PictureEntity picture = new PictureEntity(cursor.getInt(0), cursor.getInt(1),
                 cursor.getString(2), (cursor.getInt(3)!=0), cursor.getString(4),
-                cursor.getDouble(5), cursor.getDouble(6), cursor.getString(7));
+                cursor.getDouble(5), cursor.getDouble(6), cursor.getString(7), cursor.getString(8));
 
         cursor.close();
         db.close();
@@ -238,7 +241,7 @@ public class DataBaseRepository extends SQLiteOpenHelper {
                 while (cursor.moveToNext()) {
                     res.add(new PictureEntity(cursor.getInt(0), cursor.getInt(1),
                             cursor.getString(2), (cursor.getInt(3)!=0), cursor.getString(4),
-                            cursor.getDouble(5), cursor.getDouble(6), cursor.getString(7)));
+                            cursor.getDouble(5), cursor.getDouble(6), cursor.getString(7), cursor.getString(8)));
                 }
             } finally {
                 cursor.close();
@@ -262,6 +265,7 @@ public class DataBaseRepository extends SQLiteOpenHelper {
         values.put(KEY_LATITUDE, picture.getLatitude());
         values.put(KEY_LONGITUDE, picture.getLongitude());
         values.put(KEY_LOGIN, picture.getLogin());
+        values.put(KEY_COMMENT, picture.getComment());
 
         int res = db.update(TABLE_PICTURE, values, KEY_IDPICTURE + " = ?", new String[] { String.valueOf(picture.getIdPicture()) });
         db.close();

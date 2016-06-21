@@ -274,6 +274,7 @@ public class ConnectPicture extends Service {
         params.add(new BasicNameValuePair("longitude", ""+longitude));
         params.add(new BasicNameValuePair("login", login));
         params.add(new BasicNameValuePair("pathpicture", "picture/" + filename));
+        params.add(new BasicNameValuePair("comment", ""));
 
         // getting JSON string from URL
         JSONObject json = jParser.makeHttpRequest("http://alt.moments.free.fr/requests/save_bdd_picture.php", "POST", params);
@@ -283,7 +284,7 @@ public class ConnectPicture extends Service {
 
             // Checking for SUCCESS TAG
             int success = json.getInt(TAG_SUCCESS);
-            PictureEntity pe = new PictureEntity(json.getInt("idpicture"),-1,takendate,true,"picture/" + filename,latitude,longitude,login);
+            PictureEntity pe = new PictureEntity(json.getInt("idpicture"),-1,takendate,true,"picture/" + filename,latitude,longitude,login,"");
             pr.addPicture(pe);
 
             if (success == 1) {
