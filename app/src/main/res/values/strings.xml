@@ -19,6 +19,8 @@
     <string name="moment">Moment</string>
     <string name="stop_mode">Stop Mode</string>
     <string name="facebook_app_id">245759762465053</string>
-    <string name="comment">Commentaire</string>
-    <string name="do_nothing">Do nothing</string>
+    <string name="commentaire">Commentaire</string>
+    <string name="tv_timeWalk">Not started</string>
+    <string name="tv_nameWalk">Give a name to your walk...</string>
+    <string name="btn_finishWalk">Finish</string>
 </resources>
