@@ -23,4 +23,6 @@
     <string name="tv_timeWalk">Not started</string>
     <string name="tv_nameWalk">Give a name to your walk...</string>
     <string name="btn_finishWalk">Finish</string>
+    <string name="comment">Comment</string>
+    <string name="do_nothing">Do later</string>
 </resources>
