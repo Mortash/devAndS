@@ -16,4 +16,7 @@
     <string name="free_way">Mode libre</string>
     <string name="moment">Moment</string>
     <string name="stop_mode">Arrêter Mode Libre</string>
+    <string name="tv_timeWalk">Pas démarré</string>
+    <string name="tv_nameWalk">Donnez un nom à votre promenade...</string>
+    <string name="btn_finishWalk">Terminer</string>
 </resources>
