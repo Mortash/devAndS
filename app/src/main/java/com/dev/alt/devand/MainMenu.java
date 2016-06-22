@@ -99,8 +99,19 @@ public class MainMenu extends Activity {
             }
         });
 
+        //On met à jour les infos de l'utilisateur
         GetUserInfos infos = new GetUserInfos(pe.getLogin());
         infos.execute();
+
+        ImageButton friendsList = (ImageButton) findViewById(R.id.ib_friend);
+        friendsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent friendIntent = new Intent(MainMenu.this, FriendList.class);
+                friendIntent.putExtra("login", pe.getLogin());
+                startActivity(friendIntent);
+            }
+        });
     }
 
     class GetUserInfos extends AsyncTask<String, String, String> {
@@ -142,6 +153,7 @@ public class MainMenu extends Activity {
                 int success = json.getInt(TAG_SUCCESSFUL);
 
                 if (success == 1) {
+                    //On récupère le résultat du retour de la requête php
                     numPictures = Integer.toString(json.getInt(TAG_PICTURE));
                     numWalks = Integer.toString(json.getInt(TAG_WALK));
                     numSuccess = Integer.toString(json.getInt(TAG_SUCCESS));

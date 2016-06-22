@@ -19,4 +19,8 @@
     <string name="tv_timeWalk">Pas démarré</string>
     <string name="tv_nameWalk">Donnez un nom à votre promenade...</string>
     <string name="btn_finishWalk">Terminer</string>
+    <string name="do_nothing">Faire plus tard</string>
+    <string name="commentaire">Comment</string>
+    <string name="addFriend">Ajouter </string>
+    <string name="searchFriend">Entrer un pseudonyme</string>
 </resources>

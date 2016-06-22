@@ -35,6 +35,7 @@
         <activity android:name=".Registration" />
         <activity android:name=".FreeWay"/>
         <activity android:name=".CheckPicture"/>
+        <activity android:name=".FriendList"/>
 
         <service android:name=".connectDB.ConnectPicture"
             android:exported="false"/>

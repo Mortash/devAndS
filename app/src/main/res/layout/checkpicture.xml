@@ -78,7 +78,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_commentaire"
         android:hint="@string/comment"
-        android:layout_align="@+id/iv_imagePreview"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/iv_imagePreview"
         android:layout_centerHorizontal="true" />
@@ -88,7 +87,7 @@
         android:layout_height="50dp"
         android:id="@+id/ib_check"
         android:src="@drawable/icon_check"
-        android:marginTop="20dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/et_commentaire"
         android:layout_alignLeft="@+id/et_commentaire"
         android:layout_alignStart="@+id/et_commentaire" />

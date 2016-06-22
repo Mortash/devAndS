@@ -25,4 +25,6 @@
     <string name="btn_finishWalk">Finish</string>
     <string name="comment">Comment</string>
     <string name="do_nothing">Do later</string>
+    <string name="addFriend">Add</string>
+    <string name="searchFriend">Enter any nickname</string>
 </resources>
