@@ -1,11 +1,14 @@
 package com.dev.alt.devand;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,22 +32,19 @@ public class FriendList extends AppCompatActivity {
 
     private PersonEntity pe;
     DataBaseRepository pr;
-
-    //Variable globale
     String[] separatedFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
-        pr = new DataBaseRepository(getApplicationContext());
 
-        //On vérifie la bonne connexion de l'utilisateur
+        pr = new DataBaseRepository(getApplicationContext());
         pe = null;
         Bundle extras = getIntent().getExtras();
 
-        // Check if the user is connected
-        if (extras != null) {
+        //Check if the user is connected
+        if(extras != null) {
             String login = extras.getString("login");
 
             if (pr.existPerson(login)) {
@@ -60,8 +60,8 @@ public class FriendList extends AppCompatActivity {
             startActivity(returnConnection);
         }
 
-        // If user is not connected
-        if (pe == null || pe.getLoggedIn() == 0) {
+        //If user is not connected
+        if(pe == null || pe.getLoggedIn() == 0) {
             Intent returnConnection = new Intent(FriendList.this, Connection.class);
             returnConnection.putExtra("err", "Try to connect first");
             startActivity(returnConnection);
@@ -88,9 +88,31 @@ public class FriendList extends AppCompatActivity {
         GetFriendsList friendLv = new GetFriendsList(pe.getLogin());
         friendLv.execute();
 
+        //Liste des amis
+        /*final ListView showListFriends = (ListView) findViewById(R.id.lv_friendsList);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, separatedFriends);
+        showListFriends.setAdapter(adapter);
+        showListFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                AlertDialog.Builder adb = new AlertDialog.Builder(FriendList.this);
+                adb.setTitle("Delete?");
+                adb.setMessage("Are you sure you want to delete " + position);
+                final int positionToRemove = position;
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String friendToDel = adapter.getItem(positionToRemove);
+                        adapter.remove(friendToDel);
+                        adapter.notifyDataSetChanged();
+                    }});
+                adb.show();
+            }
+        });*/
+
+
         //Ajout d'un ami
-        Button addFriend = (Button) findViewById(R.id.btn_addFriend);
         final EditText tv_SearchFriend = (EditText) findViewById(R.id.tv_searchFriend);
+        Button addFriend = (Button) findViewById(R.id.btn_addFriend);
         addFriend.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
