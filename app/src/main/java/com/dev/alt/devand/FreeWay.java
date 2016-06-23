@@ -36,6 +36,8 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -130,6 +132,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
                 startActivity(i);
             }
         });
+
     }
 
     // Retour sur l'application
@@ -277,7 +280,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
                 public void run() {
                     startService(uploadIntent);
                 }
-            }, 4000);
+            }, 1000);
         } else {
             Log.e("UploadFromFW", "Image null");
         }

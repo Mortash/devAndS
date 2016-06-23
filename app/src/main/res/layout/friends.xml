@@ -91,7 +91,7 @@
             android:layout_width="80dp"
             android:layout_height="30dp"
             android:text="@string/addFriend"
-            android:id="@+id/button2"
+            android:id="@+id/btn_addFriend"
             android:background="@drawable/rounded_button"
             android:layout_marginTop="17dp"
             android:layout_marginLeft="5dp"/>

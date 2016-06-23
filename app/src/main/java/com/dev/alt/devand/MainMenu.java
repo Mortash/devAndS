@@ -31,7 +31,6 @@ public class MainMenu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
 
-        // Permets de bypass le login
         pr = new DataBaseRepository(getApplicationContext());
         pe = null;
         Bundle extras = getIntent().getExtras();
