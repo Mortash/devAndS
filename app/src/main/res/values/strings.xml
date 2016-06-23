@@ -27,4 +27,5 @@
     <string name="do_nothing">Do later</string>
     <string name="addFriend">Add</string>
     <string name="searchFriend">Enter any nickname</string>
+    <string name="noUser">This user does not exist</string>
 </resources>

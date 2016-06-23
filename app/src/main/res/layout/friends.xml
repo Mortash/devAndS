@@ -70,7 +70,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"/>
 
-    <TextView
+    <EditText
         android:layout_width="300dp"
         android:layout_height="36dp"
         android:hint="@string/searchFriend"
@@ -79,13 +79,15 @@
         android:layout_below="@+id/lv_friendsList"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:onClick="onClick"
+        android:clickable="true"/>
 
     <Button
         android:layout_width="80dp"
         android:layout_height="30dp"
         android:text="@string/addFriend"
-        android:id="@+id/button2"
+        android:id="@+id/btn_addFriend"
         android:background="@drawable/rounded_button"
         android:layout_below="@+id/lv_friendsList"
         android:layout_marginTop="17dp"

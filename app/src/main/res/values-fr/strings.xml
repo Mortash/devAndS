@@ -23,4 +23,5 @@
     <string name="commentaire">Comment</string>
     <string name="addFriend">Ajouter </string>
     <string name="searchFriend">Entrer un pseudonyme</string>
+    <string name="noUser">Cet utilisateur n\'existe pas</string>
 </resources>

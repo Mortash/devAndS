@@ -1,13 +1,28 @@
 package com.dev.alt.devand;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.alt.devand.entities.DataBaseRepository;
 import com.dev.alt.devand.entities.PersonEntity;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FriendList extends AppCompatActivity {
 
@@ -64,5 +79,178 @@ public class FriendList extends AppCompatActivity {
                 startActivity(logAction);
             }
         });
+
+        //On met à jour les infos de l'utilisateur
+        GetFriendsList friendLv = new GetFriendsList(pe.getLogin());
+        friendLv.execute();
+
+        Button addFriend = (Button) findViewById(R.id.btn_addFriend);
+        final EditText tv_SearchFriend = (EditText) findViewById(R.id.tv_searchFriend);
+        addFriend.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String friendRequest = tv_SearchFriend.getText().toString();
+                AddNewFriend createdFriend = new AddNewFriend(pe.getLogin(),friendRequest);
+                createdFriend.execute();
+            }
+        });
+    }
+
+    class GetFriendsList extends AsyncTask<String, String, String> {
+        private String login;
+        private String listFriends;
+        private static final String TAG_SUCCESSFUL = "success";
+        private static final String TAG_MESSAGE = "message";
+        private static final String TAG_FRIEND = "listFriends";
+
+        // Creating JSON Parser object
+        JSONParser jParser = new JSONParser();
+
+        public GetFriendsList(String l){
+            this.login = l;
+        }
+
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("login", login));
+
+            // getting JSON string from URL
+            String url_connection = "http://alt.moments.free.fr/requests/getFriendsList.php";
+            JSONObject json = jParser.makeHttpRequest(url_connection, "POST", params);
+
+            try {
+                Log.e("Récupération liste ami:", json.getString("message") + " ");
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+            }
+            // Check your log cat for JSON response
+            try {
+                // Checking for TAG
+                int success = json.getInt(TAG_SUCCESSFUL);
+                String message = json.getString(TAG_MESSAGE);
+
+                if (success == 1) {
+                    //On récupère le résultat du retour de la requête php
+                    listFriends = json.getString(TAG_FRIEND);
+                } else {
+                    if(message.equals("NoFriend")){
+                        listFriends = "Aucun ami";
+                    } else {
+                        Log.d(this.getClass().getSimpleName(), "Échec lors de la récupération des informations.");
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         **/
+        protected void onPostExecute(String file_url) {
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    //Affichage des données
+                    ListView displayListFriends = (ListView) findViewById(R.id.lv_friendsList);
+                    //On retire les {}
+                    listFriends = listFriends.substring(1,listFriends.length()-1);
+
+                    //On sépare chaque élément de la chaine pour les mettre dans un tableau
+                    String delims = ",";
+                    String[] separatedFriends = listFriends.split(delims);
+
+                    //On ajoute le tableau à la listView
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(FriendList.this,
+                            android.R.layout.simple_list_item_1, separatedFriends);
+                    displayListFriends.setAdapter(adapter);
+                }
+            });
+        }
+    }
+    class AddNewFriend extends AsyncTask<String, String, String> {
+        private String login;
+        private String friend;
+        private static final String TAG_SUCCESSFUL = "success";
+        private static final String TAG_MESSAGE = "message";
+        private boolean isCreated = false;
+
+        // Creating JSON Parser object
+        JSONParser jParser = new JSONParser();
+
+        public AddNewFriend(String l, String f){
+            this.login = l;
+            this.friend = f;
+        }
+
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("login", login));
+            params.add(new BasicNameValuePair("friend", friend));
+
+            // getting JSON string from URL
+            String url_connection = "http://alt.moments.free.fr/requests/addFriend.php";
+            JSONObject json = jParser.makeHttpRequest(url_connection, "POST", params);
+
+            try {
+                Log.e("Insertion ami:", json.getString("message") + " ");
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+            }
+            // Check your log cat for JSON response
+            try {
+                // Checking for TAG
+                int success = json.getInt(TAG_SUCCESSFUL);
+                String message = json.getString(TAG_MESSAGE);
+
+                if(success == 1) {
+                    //Si l'insertion est réussie
+                    isCreated = true;
+                } else {
+                    if(message.equals("NoUser")){
+                        Log.e("User doesnt exist", json.getString("message") + " ");
+                    } else {
+                        Log.d(this.getClass().getSimpleName(), "Insertion failed.");
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         **/
+        protected void onPostExecute(String file_url) {
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    //Ajout de l'ami
+                    if(isCreated == true){
+
+                    } else {
+                        Toast.makeText(FriendList.this, R.string.noUser, Toast.LENGTH_SHORT).show();
+                    }
+
+
+                    /*ListView displayListFriends = (ListView) findViewById(R.id.lv_friendsList);
+                    //On retire les {}
+                    listFriends = listFriends.substring(1,listFriends.length()-1);
+
+                    //On sépare chaque élément de la chaine pour les mettre dans un tableau
+                    String delims = ",";
+                    String[] separatedFriends = listFriends.split(delims);
+
+                    //On ajoute le tableau à la listView
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(FriendList.this,
+                            android.R.layout.simple_list_item_1, separatedFriends);
+                    displayListFriends.setAdapter(adapter);*/
+                }
+            });
+        }
     }
 }
