@@ -207,7 +207,7 @@ public class ConnectPicture extends Service {
 
             //compression de image pour envoi
             if (mBitmap != null) {
-                mBitmap.compress(Bitmap.CompressFormat.JPEG, 75, dos);
+                mBitmap.compress(Bitmap.CompressFormat.PNG, 75, dos);
             }
 
             // send multipart form data necesssary after file data...

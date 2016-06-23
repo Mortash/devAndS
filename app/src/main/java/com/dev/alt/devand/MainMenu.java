@@ -64,6 +64,9 @@ public class MainMenu extends Activity {
         TextView name = (TextView) findViewById(R.id.tv_name);
         name.setText(pe.getLogin());
 
+        //On met à jour les infos de l'utilisateur
+        GetUserInfos infos = new GetUserInfos(pe.getLogin());
+        infos.execute();
 
         // Bind components
         TextView login = (TextView) findViewById(R.id.tv_disconnect);
@@ -99,15 +102,21 @@ public class MainMenu extends Activity {
             }
         });
 
-        //On met à jour les infos de l'utilisateur
-        GetUserInfos infos = new GetUserInfos(pe.getLogin());
-        infos.execute();
-
         ImageButton friendsList = (ImageButton) findViewById(R.id.ib_friend);
         friendsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 Intent friendIntent = new Intent(MainMenu.this, FriendList.class);
+                friendIntent.putExtra("login", pe.getLogin());
+                startActivity(friendIntent);
+            }
+        });
+
+        ImageButton picList = (ImageButton) findViewById(R.id.ib_pics);
+        picList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent friendIntent = new Intent(MainMenu.this, UserGallery.class);
                 friendIntent.putExtra("login", pe.getLogin());
                 startActivity(friendIntent);
             }

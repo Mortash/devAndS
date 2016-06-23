@@ -141,7 +141,7 @@ public class Connection extends AppCompatActivity {
                     //TODO ajouter des messages d'erreur suivant le TAG_MESSAGE
                     Toast.makeText(Connection.this, "erreur", Toast.LENGTH_SHORT).show();
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

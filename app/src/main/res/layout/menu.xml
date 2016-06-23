@@ -82,7 +82,7 @@
             <ImageButton
                 android:layout_width="@dimen/image_mmenu"
                 android:layout_height="@dimen/image_mmenu"
-                android:id="@+id/ib_photos"
+                android:id="@+id/ib_pics"
                 android:src="@drawable/i_photo"
                 android:scaleType="center"
                 android:background="#00FFFFFF"/>

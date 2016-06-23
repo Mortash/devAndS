@@ -242,7 +242,7 @@ public class FreeWay extends AppCompatActivity implements SurfaceHolder.Callback
             String fileName = pe.getLogin() + "_" + timeStampFormat.format(new Date());
 
             String path = Environment.getExternalStorageDirectory().toString();
-            file = new File(path, "/DCIM/Camera/" + fileName + ".jpg");
+            file = new File(path, "/DCIM/Camera/" + fileName + ".png");
             stream = new FileOutputStream(file);
 
             Camera.Parameters params = camera.getParameters();
