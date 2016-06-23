@@ -24,4 +24,6 @@
     <string name="addFriend">Ajouter </string>
     <string name="searchFriend">Entrer un pseudonyme</string>
     <string name="noUser">Cet utilisateur n\'existe pas</string>
+    <string name="friendAdded">Cet utilisateur est désormais votre ami</string>
+    <string name="alreadyFriend">Cet utilisateur est déjà votre ami</string>
 </resources>

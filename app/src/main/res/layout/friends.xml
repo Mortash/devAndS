@@ -62,38 +62,32 @@
         android:layout_marginTop="5dp" />
 
     <ListView
-        android:layout_width="375dp"
-        android:layout_height="300dp"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
         android:id="@+id/lv_friendsList"
         android:layout_below="@+id/imageView2"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:id="@+id/ll_findfriend"
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="36dp"
+        android:hint="@string/searchFriend"
+        android:id="@+id/tv_searchFriend"
+        android:background="@drawable/rounded_edit_text"
         android:layout_below="@+id/lv_friendsList"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/padd_top">
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center" />
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="36dp"
-            android:hint="@string/searchFriend"
-            android:id="@+id/tv_searchFriend"
-            android:background="@drawable/rounded_edit_text"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
-            android:gravity="center"/>
-
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:text="@string/addFriend"
-            android:id="@+id/btn_addFriend"
-            android:background="@drawable/rounded_button"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="5dp"/>
-    </LinearLayout>
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:text="@string/addFriend"
+        android:id="@+id/btn_addFriend"
+        android:background="@drawable/rounded_button"
+        android:layout_below="@+id/lv_friendsList"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="320dp"/>
 </RelativeLayout>

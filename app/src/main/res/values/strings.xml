@@ -28,5 +28,6 @@
     <string name="addFriend">Add</string>
     <string name="searchFriend">Enter any nickname</string>
     <string name="noUser">This user does not exist</string>
-    <string name="descr_image">Image</string>
+    <string name="friendAdded">This user is now your friend</string>
+    <string name="alreadyFriend">This user is already your friend</string>
 </resources>

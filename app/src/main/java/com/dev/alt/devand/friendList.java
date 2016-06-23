@@ -1,11 +1,14 @@
 package com.dev.alt.devand;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,25 +25,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FriendList extends AppCompatActivity {
 
     private PersonEntity pe;
     DataBaseRepository pr;
+    String[] separatedFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
-        pr = new DataBaseRepository(getApplicationContext());
 
-        //On vérifie la bonne connexion de l'utilisateur
+        pr = new DataBaseRepository(getApplicationContext());
         pe = null;
         Bundle extras = getIntent().getExtras();
 
-        // Check if the user is connected
-        if (extras != null) {
+        //Check if the user is connected
+        if(extras != null) {
             String login = extras.getString("login");
 
             if (pr.existPerson(login)) {
@@ -56,8 +60,8 @@ public class FriendList extends AppCompatActivity {
             startActivity(returnConnection);
         }
 
-        // If user is not connected
-        if (pe == null || pe.getLoggedIn() == 0) {
+        //If user is not connected
+        if(pe == null || pe.getLoggedIn() == 0) {
             Intent returnConnection = new Intent(FriendList.this, Connection.class);
             returnConnection.putExtra("err", "Try to connect first");
             startActivity(returnConnection);
@@ -80,21 +84,68 @@ public class FriendList extends AppCompatActivity {
             }
         });
 
-        //On met à jour les infos de l'utilisateur
+        //On récupère la liste des amis
         GetFriendsList friendLv = new GetFriendsList(pe.getLogin());
         friendLv.execute();
 
-        Button addFriend = (Button) findViewById(R.id.btn_addFriend);
+        //Liste des amis
+        /*final ListView showListFriends = (ListView) findViewById(R.id.lv_friendsList);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, separatedFriends);
+        showListFriends.setAdapter(adapter);
+        showListFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                AlertDialog.Builder adb = new AlertDialog.Builder(FriendList.this);
+                adb.setTitle("Delete?");
+                adb.setMessage("Are you sure you want to delete " + position);
+                final int positionToRemove = position;
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String friendToDel = adapter.getItem(positionToRemove);
+                        adapter.remove(friendToDel);
+                        adapter.notifyDataSetChanged();
+                    }});
+                adb.show();
+            }
+        });*/
+
+
+        //Ajout d'un ami
         final EditText tv_SearchFriend = (EditText) findViewById(R.id.tv_searchFriend);
+        Button addFriend = (Button) findViewById(R.id.btn_addFriend);
         addFriend.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 String friendRequest = tv_SearchFriend.getText().toString();
-                AddNewFriend createdFriend = new AddNewFriend(pe.getLogin(),friendRequest);
-                createdFriend.execute();
+
+                //On ajoute l'ami uniquement s'il n'est pas déjà présent dans la liste
+                boolean isAlreadyExist = false;
+                if(separatedFriends.length > 0){
+                    for(int i = 0;i < separatedFriends.length;i++){
+                        if(separatedFriends[i].equals(friendRequest)){
+                            isAlreadyExist = true;
+                        }
+                    }
+                }
+                if(isAlreadyExist == false){
+                    AddNewFriend createdFriend = new AddNewFriend(pe.getLogin(),friendRequest);
+                    createdFriend.execute();
+                    //On remet le champ de saisi à vide
+                    tv_SearchFriend.setText("");
+
+                    //On appelle à nouveau la récupération de la liste
+                    GetFriendsList friendLv = new GetFriendsList(pe.getLogin());
+                    friendLv.execute();
+                } else {
+                    Toast.makeText(FriendList.this, R.string.alreadyFriend, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
+    /******************************/
+    /****Remplissage liste ami*****/
+    /******************************/
 
     class GetFriendsList extends AsyncTask<String, String, String> {
         private String login;
@@ -155,21 +206,30 @@ public class FriendList extends AppCompatActivity {
                 public void run() {
                     //Affichage des données
                     ListView displayListFriends = (ListView) findViewById(R.id.lv_friendsList);
-                    //On retire les {}
-                    listFriends = listFriends.substring(1,listFriends.length()-1);
 
+                    if(listFriends != "Aucun ami"){
+                        //On retire les {}
+                        listFriends = listFriends.substring(1,listFriends.length()-1);
+                    }
                     //On sépare chaque élément de la chaine pour les mettre dans un tableau
                     String delims = ",";
-                    String[] separatedFriends = listFriends.split(delims);
+                    separatedFriends = listFriends.split(delims);
+
+                    //On trie le tableau
+                    Arrays.sort(separatedFriends);
 
                     //On ajoute le tableau à la listView
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(FriendList.this,
-                            android.R.layout.simple_list_item_1, separatedFriends);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(FriendList.this, android.R.layout.simple_list_item_1, separatedFriends);
                     displayListFriends.setAdapter(adapter);
                 }
             });
         }
     }
+
+    /******************************/
+    /*******Ajout nouvel  ami******/
+    /******************************/
+
     class AddNewFriend extends AsyncTask<String, String, String> {
         private String login;
         private String friend;
@@ -229,26 +289,11 @@ public class FriendList extends AppCompatActivity {
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    //Ajout de l'ami
-                    if(isCreated == true){
-
+                    if(isCreated == true){ //Ajout de l'ami
+                        Toast.makeText(FriendList.this, R.string.friendAdded, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(FriendList.this, R.string.noUser, Toast.LENGTH_SHORT).show();
                     }
-
-
-                    /*ListView displayListFriends = (ListView) findViewById(R.id.lv_friendsList);
-                    //On retire les {}
-                    listFriends = listFriends.substring(1,listFriends.length()-1);
-
-                    //On sépare chaque élément de la chaine pour les mettre dans un tableau
-                    String delims = ",";
-                    String[] separatedFriends = listFriends.split(delims);
-
-                    //On ajoute le tableau à la listView
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(FriendList.this,
-                            android.R.layout.simple_list_item_1, separatedFriends);
-                    displayListFriends.setAdapter(adapter);*/
                 }
             });
         }
