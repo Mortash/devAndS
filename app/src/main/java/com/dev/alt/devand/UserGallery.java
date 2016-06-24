@@ -24,6 +24,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -183,6 +184,11 @@ public class UserGallery extends AppCompatActivity {
                         }
 
                         Log.d("UserGalleryResult","image récupéré");
+
+                        final File dir = new File(getBaseContext().getFilesDir() + "/DCIM/Camera/");
+                        dir.mkdirs(); //create folders where write files
+                        final File file = new File(dir, separated[i].split("/")[1]);
+
                         FileOutputStream out = null;
                         try {
                             out = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/" + separated[i].split("/")[1]);
