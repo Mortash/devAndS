@@ -165,14 +165,14 @@ public class UserGallery extends AppCompatActivity {
 
                 if (success == 1) {
                     uriPict = json.getString(TAG_URI);
-                    Log.e("Tab1G", "GetPictUser : " + uriPict);
+                    Log.e("UserGalleryResult", "GetPictUser : " + uriPict);
 
                     String[] separated = uriPict.split(",");
 
                     for(int i=0; i< separated.length;i++) {
                         Log.d("UserGalleryResult",separated[i]);
-/*
-                        String add = "http://alt.moments.free.fr/requests/downloadPictures.php?uri=" + uri;
+
+                        String add = "http://alt.moments.free.fr/requests/downloadPictures.php?uri=" + separated[i];
                         URL url = null;
                         Bitmap image = null;
                         try {
@@ -187,7 +187,7 @@ public class UserGallery extends AppCompatActivity {
                         Log.d("UserGalleryResult","image récupéré");
                         FileOutputStream out = null;
                         try {
-                            out = new FileOutputStream("/DCIM/Camera/" + uri.split("/")[1]);
+                            out = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/" + separated[i].split("/")[1]);
                             image.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
                             // PNG is a lossless format, the compression factor (100) is ignored
                         } catch (Exception e) {
@@ -202,7 +202,7 @@ public class UserGallery extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        Log.d("UserGalleryResult","image enregistré");*/
+                        Log.d("UserGalleryResult","image enregistré");
                     }
                     //
                 } else {
