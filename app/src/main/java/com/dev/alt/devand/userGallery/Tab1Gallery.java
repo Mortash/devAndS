@@ -64,14 +64,14 @@ public class Tab1Gallery extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.tab1_gallery, container, false);
-        GridView listView = (GridView) rootView.findViewById(R.id.gv_picGall);
+        /*GridView listView = (GridView) rootView.findViewById(R.id.gv_picGall);
         ((GridView) listView).setAdapter(new ImageAdapter(getActivity()));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startImagePagerActivity(position);
             }
-        });
+        });*/
         return rootView;
     }
 

@@ -31,4 +31,7 @@
     <string name="friendAdded">This user is now your friend</string>
     <string name="alreadyFriend">This user is already your friend</string>
     <string name="descr_image">image</string>
+
+    <string name="title_activity_maps">Map</string>
+
 </resources>

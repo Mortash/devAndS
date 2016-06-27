@@ -116,6 +116,7 @@ public class MainMenu extends Activity {
             @Override
             public void onClick(View v){
                 Intent friendIntent = new Intent(MainMenu.this, UserGallery.class);
+                //Intent friendIntent = new Intent(MainMenu.this, TutoGallery.class);
                 friendIntent.putExtra("login", pe.getLogin());
                 startActivity(friendIntent);
             }

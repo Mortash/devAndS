@@ -10,4 +10,6 @@
     <color name="buttonGreen">#b6ca7f</color>
     <color name="backgroundGreen">#c2d789</color>
     <color name="validate_green">#146f1a</color>
+    <color name="blanc">#FEFEFE</color>
+
 </resources>
