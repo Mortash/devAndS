@@ -1,6 +1,10 @@
 [
     {
-        "merged": "D:\\AndroidStudioProjects\\devAnd\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\ic_launcher.png",
-        "source": "D:\\AndroidStudioProjects\\devAnd\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+        "merged": "/Users/Tom/Documents/projectAndroid/devMomo/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi-v4/ic_evry.png",
+        "source": "/Users/Tom/Documents/projectAndroid/devMomo/app/src/main/res/mipmap-xxxhdpi/ic_evry.png"
+    },
+    {
+        "merged": "/Users/Tom/Documents/projectAndroid/devMomo/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi-v4/ic_launcher.png",
+        "source": "/Users/Tom/Documents/projectAndroid/devMomo/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
     }
 ]
